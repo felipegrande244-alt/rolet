@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FortuneBetwin77</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container fade-in">
+        <div class="app-header">
+            <h1 class="app-title">🎰 FortuneBetwin77</h1>
+            <div class="app-subtitle">Sua sorte começa aqui!</div>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="username">Usuário</label>
+                <input type="text" id="username" class="form-input" placeholder="Digite seu usuário" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">Senha</label>
+                <input type="password" id="password" class="form-input" placeholder="Digite sua senha" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary glow-effect">🎯 Entrar na Sorte</button>
+            <button type="button" id="registerBtn" class="btn btn-secondary">📝 Criar Nova Conta</button>
+            
+            <div id="errorMessage" class="message message-error d-none">
+                Usuário ou senha incorretos!
+            </div>
+            
+            <div id="successMessage" class="message message-success d-none">
+                Login realizado com sucesso! 🎉
+            </div>
+        </form>
+        
+        <div class="app-footer">
+            FortuneBetwin77 © 2024 • Jogue com responsabilidade
+        </div>
+    </div>
+
+    <script>
+        // Sistema de autenticação corrigido
+        class AuthSystem {
+            constructor() {
+                this.users = JSON.parse(localStorage.getItem('fortuneUsers')) || {
+                    'admin': this.hashPassword('123456'),
+                    'usuario': this.hashPassword('senha123'),
+                    'teste': this.hashPassword('teste123')
+                };
+            }
+
+            hashPassword(password) {
+                // Hash simples para demonstração
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString();
+            }
+
+            login(username, password) {
+                const hashedPassword = this.hashPassword(password);
+                
+                if (this.users[username] && this.users[username] === hashedPassword) {
+                    this.saveSession(username);
+                    return { success: true, message: 'Login realizado com sucesso! 🎉' };
+                } else {
+                    return { success: false, message: 'Usuário ou senha incorretos!' };
+                }
+            }
+
+            register(username, password) {
+                if (this.users[username]) {
+                    return { success: false, message: 'Usuário já existe! Escolha outro nome.' };
+                }
+                
+                if (username.length < 3) {
+                    return { success: false, message: 'Nome deve ter pelo menos 3 caracteres!' };
+                }
+                
+                if (password.length < 4) {
+                    return { success: false, message: 'Senha deve ter pelo menos 4 caracteres!' };
+                }
+                
+                this.users[username] = this.hashPassword(password);
+                this.saveUsers();
+                
+                return { success: true, message: 'Conta criada com sucesso! 🎊' };
+            }
+
+            saveUsers() {
+                localStorage.setItem('fortuneUsers', JSON.stringify(this.users));
+            }
+
+            saveSession(username) {
+                const sessionData = {
+                    username: username,
+                    loginTime: new Date().toISOString()
+                };
+                localStorage.setItem('userSession', JSON.stringify(sessionData));
+            }
+        }
+
+        // Inicializar sistema
+        const authSystem = new AuthSystem();
+
+        // Elementos DOM
+        const loginForm = document.getElementById('loginForm');
+        const registerBtn = document.getElementById('registerBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        // Função para mostrar mensagem
+        function showMessage(element, message) {
+            element.textContent = message;
+            element.classList.remove('d-none');
+            element.classList.add('d-block');
+            
+            // Esconder outras mensagens
+            if (element === errorMessage) {
+                successMessage.classList.remove('d-block');
+                successMessage.classList.add('d-none');
+            } else {
+                errorMessage.classList.remove('d-block');
+                errorMessage.classList.add('d-none');
+            }
+        }
+
+        // Login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = this.querySelector('button[type="submit"]');
+
+            // Reset mensagens
+            errorMessage.classList.remove('d-block');
+            successMessage.classList.remove('d-block');
+
+            if (!username || !password) {
+                showMessage(errorMessage, 'Por favor, preencha todos os campos!');
+                return;
+            }
+
+            // Efeito de loading
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            // Simular delay de rede
+            setTimeout(() => {
+                const result = authSystem.login(username, password);
+
+                if (result.success) {
+                    showMessage(successMessage, result.message);
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showMessage(errorMessage, result.message);
+                }
+
+                // Remover loading
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }, 1000);
+        });
+
+        // Registro
+        registerBtn.addEventListener('click', function() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Reset mensagens
+            errorMessage.classList.remove('d-block');
+            successMessage.classList.remove('d-block');
+
+            if (!username || !password) {
+                showMessage(errorMessage, 'Por favor, preencha todos os campos!');
+                return;
+            }
+
+            // Efeito de loading
+            this.classList.add('loading');
+            this.disabled = true;
+
+            // Simular delay de rede
+            setTimeout(() => {
+                const result = authSystem.register(username, password);
+
+                if (result.success) {
+                    showMessage(successMessage, result.message);
+                    document.getElementById('password').value = '';
+                } else {
+                    showMessage(errorMessage, result.message);
+                }
+
+                // Remover loading
+                this.classList.remove('loading');
+                this.disabled = false;
+            }, 1000);
+        });
+
+        // Foco automático
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>

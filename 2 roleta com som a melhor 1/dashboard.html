@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎰 FortuneBetwin77 - Cassino</title>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #2d2a4a 0%, #1a1635 100%);
+      color: white;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 15px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .casino-header { 
+      text-align: center; 
+      margin-bottom: 10px;
+      width: 100%;
+    }
+    
+    .casino-header h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(90deg, #ffd700, #ff9f00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 5px;
+    }
+
+    .balance-box { 
+      text-align: center; 
+      margin-bottom: 8px;
+      font-weight: 700; 
+      color: #ffd700; 
+      font-size: 1.2rem;
+    }
+
+    .casino-menu {
+      display: flex; 
+      flex-wrap: wrap; 
+      justify-content: center; 
+      gap: 12px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .casino-menu button, .deposit-btn {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+      border: none; 
+      padding: 10px 18px;
+      border-radius: 12px;
+      color: white; 
+      font-weight: 700; 
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s; 
+      min-width: 110px;
+    }
+
+    .casino-menu button:hover, .deposit-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 20px rgba(118, 75, 162, 0.8);
+    }
+
+    .deposit-btn { 
+      background: linear-gradient(135deg, #ff9f00, #ffd700); 
+      color: #1a1635; 
+    }
+
+    .roulette-game {
+      background: rgba(255, 255, 255, 0.08);
+      border: none; 
+      border-radius: 20px; 
+      padding: 15px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+      display: flex; 
+      flex-direction: column; 
+      align-items: center;
+      margin-bottom: 15px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .game-info { 
+      font-size: 1rem; 
+      margin-bottom: 5px;
+      color: #ffd700; 
+      text-align: center; 
+      font-weight: 600; 
+    }
+
+    .bet-controls {
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+
+    .bet-btn {
+      background: #ffd700; 
+      border: none; 
+      border-radius: 10px;
+      font-size: 20px; 
+      font-weight: 700; 
+      color: #1a1635;
+      width: 35px; 
+      height: 35px; 
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .bet-btn:hover {
+      background: #ffed4e;
+      transform: scale(1.05);
+    }
+
+    .bet-btn:active {
+      transform: scale(0.95);
+    }
+
+    .bet-value { 
+      font-size: 18px; 
+      font-weight: 700; 
+      color: #fff; 
+      width: 80px; 
+      text-align: center; 
+    }
+
+    .spin-btn {
+      background: linear-gradient(135deg, #ff9f00, #ffd700);
+      color: #1a1635; 
+      border: none; 
+      padding: 12px 25px;
+      border-radius: 15px; 
+      font-size: 18px; 
+      font-weight: 800;
+      cursor: pointer; 
+      transition: all 0.3s;
+    }
+
+    .spin-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .spin-btn:active {
+      transform: scale(0.98);
+    }
+
+    .spin-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .result { 
+      margin-top: 8px;
+      font-size: 1.4rem; 
+      font-weight: 700; 
+      color: #ffd700; 
+      text-align: center;
+      min-height: 30px;
+    }
+
+    /* 🔁 Roleta COM SETA FIXA NO TOPO */
+    .roulette-container {
+      position: relative;
+      margin: 20px auto;
+      width: 450px;
+      height: 450px;
+    }
+
+    .roulette-wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: url('ggjj.png') center/cover no-repeat;
+      transition: transform 13s cubic-bezier(0.2, 0.8, 0.1, 0.9);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      position: relative;
+      transform: scale(1.1);
+    }
+
+    /* Roleta 2 */
+    #rouletteWheel2 {
+      background: url('ggjj.png') center/cover no-repeat;
+      transform: scale(1.1);
+    }
+
+    .roulette-wheel::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      background: #666;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    /* SETA FIXA NO TOPO DA ROLETA */
+    .roulette-pointer {
+      position: absolute;
+      top: -10px; /* Posicionada acima da roleta */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 35px solid #ff4444; /* Seta vermelha virada para baixo */
+      z-index: 10;
+      filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+    }
+
+    /* Efeito de brilho na seta */
+    .roulette-pointer::after {
+      content: "";
+      position: absolute;
+      top: -35px;
+      left: -20px;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0.6; transform: scale(0.8); }
+    }
+
+    /* BOTÃO DA ROLETA ESPECÍFICO */
+    #spinRouletteBtn1, #spinRouletteBtn2 {
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
+    .modal {
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none; 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: #2d2a4a; 
+      padding: 25px; 
+      border-radius: 15px;
+      border: 2px solid #ffd700; 
+      text-align: center;
+      width: 90%; 
+      max-width: 400px; 
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+    }
+
+    .copy-btn {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+      color: #fff; 
+      border: none; 
+      padding: 10px 20px;
+      border-radius: 10px; 
+      margin-top: 10px; 
+      font-weight: 700; 
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .logout-btn {
+      position: fixed; 
+      top: 15px;
+      right: 15px;
+      background: #e53e3e; 
+      color: white; 
+      padding: 8px 15px;
+      border: none; 
+      border-radius: 10px; 
+      cursor: pointer;
+      font-weight: 700; 
+      z-index: 99;
+    }
+    
+    input[type="number"] {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ffd700;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      width: 80%;
+      margin: 10px 0;
+    }
+    
+    .session-timeout {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #2d2a4a;
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      padding: 20px;
+      z-index: 1000;
+      display: none;
+    }
+
+    /* Estilo para indicar que há som */
+    .has-sound::after {
+      content: " 🔊";
+      font-size: 0.8em;
+    }
+  </style>
+</head>
+<body>
+  <button class="logout-btn" id="logoutBtn">🚪 Sair</button>
+
+  <div class="casino-header">
+    <h1>🎰 FortuneBetwin Cassino</h1>
+    <p>Gire e teste sua sorte!</p>
+  </div>
+
+  <div class="balance-box">
+    💰 Saldo: R$ <span id="balance">0.00</span>
+  </div>
+
+  <div class="casino-menu">
+    <button id="roulette1Tab" class="has-sound">🎡 Roleta Clássica</button>
+    <button id="roulette2Tab" class="has-sound">🎡 Roleta Premium</button>
+    <button class="deposit-btn has-sound" id="depositBtn">💰 Depósito</button>
+    <button id="withdrawBtn" class="has-sound">🏧 Saque</button>
+  </div>
+
+  <!-- ROLETA 1 -->
+  <div class="roulette-game" id="rouletteGame1">
+    <div class="game-info" id="rouletteInfo1">🎡 Roleta Clássica | Aposta: R$2 | Prêmio: R$15</div>
+    <div class="bet-controls">
+      <button class="bet-btn has-sound" id="rouletteMinus1">–</button>
+      <div class="bet-value" id="rouletteBet1">R$2</div>
+      <button class="bet-btn has-sound" id="roulettePlus1">+</button>
+    </div>
+
+    <div class="roulette-container">
+      <div class="roulette-wheel" id="rouletteWheel1"></div>
+      <!-- SETA FIXA ADICIONADA -->
+      <div class="roulette-pointer"></div>
+    </div>
+
+    <button class="spin-btn has-sound" id="spinRouletteBtn1">🎡 GIRAR ROLETA CLÁSSICA</button>
+
+    <div class="result" id="rouletteResult1"></div>
+  </div>
+
+  <!-- ROLETA 2 -->
+  <div class="roulette-game" id="rouletteGame2" style="display:none;">
+    <div class="game-info" id="rouletteInfo2">🎡 Roleta Premium | Aposta: R$5 | Prêmio: R$35</div>
+    <div class="bet-controls">
+      <button class="bet-btn has-sound" id="rouletteMinus2">–</button>
+      <div class="bet-value" id="rouletteBet2">R$5</div>
+      <button class="bet-btn has-sound" id="roulettePlus2">+</button>
+    </div>
+
+    <div class="roulette-container">
+      <div class="roulette-wheel" id="rouletteWheel2"></div>
+      <!-- SETA FIXA ADICIONADA -->
+      <div class="roulette-pointer"></div>
+    </div>
+
+    <button class="spin-btn has-sound" id="spinRouletteBtn2">🎡 GIRAR ROLETA PREMIUM</button>
+
+    <div class="result" id="rouletteResult2"></div>
+  </div>
+
+  <!-- MODAIS -->
+  <div class="modal" id="depositModal">
+    <div class="modal-content">
+      <h2>💰 Depósito via PIX</h2>
+      <div style="background: white; padding: 15px; border-radius: 10px; margin: 15px 0; display: inline-block;">
+        <div style="width: 200px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+          QR Code PIX
+        </div>
+      </div>
+      <p id="pixLink">https://pix.fortunebetwin.com</p>
+      <button class="copy-btn has-sound" onclick="copyPix()">📋 Copiar Link PIX</button>
+      <button class="copy-btn has-sound" onclick="closeModal('depositModal')">Fechar</button>
+    </div>
+  </div>
+
+  <div class="modal" id="withdrawModal">
+    <div class="modal-content">
+      <h2>🏧 Solicitar Saque</h2>
+      <p>Informe o valor:</p>
+      <input type="number" id="withdrawAmount" placeholder="Ex: 50.00" min="1" step="0.01">
+      <div>
+        <button class="copy-btn has-sound" onclick="confirmWithdraw()">Sacar</button>
+        <button class="copy-btn has-sound" onclick="closeModal('withdrawModal')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de timeout de sessão -->
+  <div class="session-timeout" id="sessionTimeout">
+    <h2>Sessão Expirada</h2>
+    <p>Por segurança, sua sessão expirou devido à inatividade.</p>
+    <button class="copy-btn has-sound" onclick="reloadPage()">Recarregar Página</button>
+  </div>
+
+  <script>
+    // ========== SISTEMA DE SONS ==========
+    
+    // Função para criar som de botão
+    function playButtonSound() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 800;
+        gainNode.gain.value = 0.1;
+        
+        oscillator.start();
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+        oscillator.stop(audioContext.currentTime + 0.1);
+      } catch (e) {
+        console.log('Áudio não suportado: ', e);
+      }
+    }
+    
+    // Função para criar som de roleta girando (13 segundos)
+    function playRouletteSpinSound() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.type = 'sawtooth';
+        oscillator.frequency.setValueAtTime(250, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(60, audioContext.currentTime + 13);
+        
+        gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.005, audioContext.currentTime + 13);
+        
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 13);
+      } catch (e) {
+        console.log('Áudio não suportado: ', e);
+      }
+    }
+    
+    // Função para criar som de vitória
+    function playWinSound() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        const times = [0, 0.1, 0.2, 0.3];
+        const frequencies = [523.25, 659.25, 783.99, 1046.50];
+        
+        times.forEach((time, index) => {
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          oscillator.type = 'sine';
+          oscillator.frequency.value = frequencies[index];
+          
+          gainNode.gain.setValueAtTime(0, audioContext.currentTime + time);
+          gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + time + 0.05);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + time + 0.3);
+          
+          oscillator.start(audioContext.currentTime + time);
+          oscillator.stop(audioContext.currentTime + time + 0.3);
+        });
+      } catch (e) {
+        console.log('Áudio não suportado: ', e);
+      }
+    }
+
+    // ========== SISTEMA DE SEGURANÇA ==========
+    
+    if (window.location.protocol !== 'https:' && !window.location.hostname.includes('localhost')) {
+      alert('AVISO DE SEGURANÇA: Esta página deve ser executada via HTTPS para maior segurança.');
+    }
+    
+    const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('fortuneSessionId', sessionId);
+    
+    let sessionTimeout;
+    function resetSessionTimeout() {
+      clearTimeout(sessionTimeout);
+      sessionTimeout = setTimeout(() => {
+        document.getElementById('sessionTimeout').style.display = 'block';
+        localStorage.removeItem('fortuneBalance');
+      }, 30 * 60 * 1000);
+    }
+    
+    document.addEventListener('click', resetSessionTimeout);
+    document.addEventListener('keypress', resetSessionTimeout);
+    
+    // ========== FUNÇÕES DE SEGURANÇA ==========
+    
+    function sanitizeInput(input) {
+      const div = document.createElement('div');
+      div.textContent = input;
+      return div.innerHTML;
+    }
+    
+    function isValidNumber(value) {
+      return !isNaN(parseFloat(value)) && isFinite(value) && value > 0;
+    }
+    
+    function checkDataIntegrity() {
+      const savedBalance = localStorage.getItem('fortuneBalance');
+      const savedSession = localStorage.getItem('fortuneSessionId');
+      
+      if (!savedSession) {
+        localStorage.setItem('fortuneSessionId', sessionId);
+      }
+      
+      if (savedBalance && !isValidNumber(savedBalance)) {
+        console.warn('Saldo corrompido detectado. Reiniciando...');
+        localStorage.setItem('fortuneBalance', '100');
+        return 100;
+      }
+      
+      return parseFloat(savedBalance) || 100;
+    }
+    
+    // ========== ELEMENTOS DOM ==========
+    const balanceEl = document.getElementById("balance");
+    const rouletteBetDisplay1 = document.getElementById("rouletteBet1");
+    const rouletteInfo1 = document.getElementById("rouletteInfo1");
+    const rouletteBetDisplay2 = document.getElementById("rouletteBet2");
+    const rouletteInfo2 = document.getElementById("rouletteInfo2");
+    const rouletteResult1 = document.getElementById("rouletteResult1");
+    const rouletteResult2 = document.getElementById("rouletteResult2");
+    const spinRouletteBtn1 = document.getElementById("spinRouletteBtn1");
+    const spinRouletteBtn2 = document.getElementById("spinRouletteBtn2");
+    const rouletteGame1 = document.getElementById("rouletteGame1");
+    const rouletteGame2 = document.getElementById("rouletteGame2");
+    
+    // ========== ESTADO DO JOGO ==========
+    let balance = checkDataIntegrity();
+    let rouletteBet1 = 2;
+    let rouletteBet2 = 5;
+    
+    // ========== FUNÇÕES DE ATUALIZAÇÃO ==========
+    function updateBalance() {
+      balanceEl.textContent = balance.toFixed(2);
+      localStorage.setItem("fortuneBalance", balance);
+    }
+    
+    function updateRouletteInfo1() {
+      rouletteBetDisplay1.textContent = `R$${rouletteBet1}`;
+      rouletteInfo1.textContent = `🎡 Roleta Clássica | Aposta: R$${rouletteBet1} | Prêmio: R$${(rouletteBet1 * 7.5).toFixed(2)}`;
+    }
+    
+    function updateRouletteInfo2() {
+      rouletteBetDisplay2.textContent = `R$${rouletteBet2}`;
+      rouletteInfo2.textContent = `🎡 Roleta Premium | Aposta: R$${rouletteBet2} | Prêmio: R$${(rouletteBet2 * 7).toFixed(2)}`;
+    }
+    
+    // ========== JOGO DE ROLETA 1 ==========
+    function spinRoulette1() {
+      if (!isValidNumber(rouletteBet1) || rouletteBet1 < 1 || rouletteBet1 > 100) {
+        alert("Valor de aposta inválido!");
+        return;
+      }
+      
+      if (balance < rouletteBet1) {
+        alert(`💸 Saldo insuficiente (mínimo R$${rouletteBet1})!`);
+        return;
+      }
+      
+      console.log(`Jogada registrada - Roleta 1: R$${rouletteBet1}, Sessão: ${sessionId}`);
+      
+      balance -= rouletteBet1;
+      updateBalance();
+      
+      const wheel = document.getElementById("rouletteWheel1");
+      
+      // CORREÇÃO: RESETAR A ROTAÇÃO ANTES DE INICIAR NOVO GIRO
+      wheel.style.transition = 'none';
+      wheel.style.transform = 'rotate(0deg) scale(1.1)';
+      
+      // Forçar reflow
+      void wheel.offsetWidth;
+      
+      // EXATAMENTE 13 VOLTAS COMPLETAS + ÂNGULO FINAL ALEATÓRIO
+      const rotations = 13;
+      const stopAngle = Math.floor(Math.random() * 360);
+      const totalDegrees = (rotations * 360) + stopAngle;
+      
+      console.log(`Roleta 1: ${rotations} voltas + ${stopAngle}° = ${totalDegrees}° total`);
+      
+      // TOCAR SOM DA ROLETA
+      playRouletteSpinSound();
+      
+      // APLICAR ANIMAÇÃO CORRIGIDA
+      wheel.style.transition = 'transform 13s cubic-bezier(0.2, 0.8, 0.1, 0.9)';
+      wheel.style.transform = `rotate(${totalDegrees}deg) scale(1.1)`;
+      
+      spinRouletteBtn1.disabled = true;
+      rouletteResult1.textContent = "Girando... 🎡";
+      
+      setTimeout(() => {
+        const normalizedAngle = (360 - (stopAngle % 360)) % 360;
+        const sectorSize = 360 / 24;
+        const sectorIndex = Math.floor(normalizedAngle / sectorSize);
+        const isRed = sectorIndex % 2 === 0;
+        
+        const win = Math.random() < 0.3;
+        
+        if (win) {
+          const winAmount = rouletteBet1 * 7.5;
+          balance += winAmount;
+          rouletteResult1.textContent = `🎯 Você ganhou R$${winAmount.toFixed(2)}!`;
+          playWinSound();
+          console.log(`Vitória registrada - Roleta 1: R$${winAmount}, Sessão: ${sessionId}`);
+        } else {
+          rouletteResult1.textContent = "😢 Nada desta vez!";
+        }
+        
+        updateBalance();
+        spinRouletteBtn1.disabled = false;
+        resetSessionTimeout();
+      }, 13000);
+    }
+    
+    // ========== JOGO DE ROLETA 2 ==========
+    function spinRoulette2() {
+      if (!isValidNumber(rouletteBet2) || rouletteBet2 < 1 || rouletteBet2 > 100) {
+        alert("Valor de aposta inválido!");
+        return;
+      }
+      
+      if (balance < rouletteBet2) {
+        alert(`💸 Saldo insuficiente (mínimo R$${rouletteBet2})!`);
+        return;
+      }
+      
+      console.log(`Jogada registrada - Roleta 2: R$${rouletteBet2}, Sessão: ${sessionId}`);
+      
+      balance -= rouletteBet2;
+      updateBalance();
+      
+      const wheel = document.getElementById("rouletteWheel2");
+      
+      // CORREÇÃO: RESETAR A ROTAÇÃO ANTES DE INICIAR NOVO GIRO
+      wheel.style.transition = 'none';
+      wheel.style.transform = 'rotate(0deg) scale(1.1)';
+      
+      // Forçar reflow
+      void wheel.offsetWidth;
+      
+      // EXATAMENTE 13 VOLTAS COMPLETAS + ÂNGULO FINAL ALEATÓRIO
+      const rotations = 13;
+      const stopAngle = Math.floor(Math.random() * 360);
+      const totalDegrees = (rotations * 360) + stopAngle;
+      
+      console.log(`Roleta 2: ${rotations} voltas + ${stopAngle}° = ${totalDegrees}° total`);
+      
+      // TOCAR SOM DA ROLETA
+      playRouletteSpinSound();
+      
+      // APLICAR ANIMAÇÃO CORRIGIDA
+      wheel.style.transition = 'transform 13s cubic-bezier(0.2, 0.8, 0.1, 0.9)';
+      wheel.style.transform = `rotate(${totalDegrees}deg) scale(1.1)`;
+      
+      spinRouletteBtn2.disabled = true;
+      rouletteResult2.textContent = "Girando... 🎡";
+      
+      setTimeout(() => {
+        const normalizedAngle = (360 - (stopAngle % 360)) % 360;
+        const sectorSize = 360 / 24;
+        const sectorIndex = Math.floor(normalizedAngle / sectorSize);
+        const isRed = sectorIndex % 2 === 0;
+        
+        const win = Math.random() < 0.25;
+        
+        if (win) {
+          const winAmount = rouletteBet2 * 7;
+          balance += winAmount;
+          rouletteResult2.textContent = `🎯 Você ganhou R$${winAmount.toFixed(2)}!`;
+          playWinSound();
+          console.log(`Vitória registrada - Roleta 2: R$${winAmount}, Sessão: ${sessionId}`);
+        } else {
+          rouletteResult2.textContent = "😢 Nada desta vez!";
+        }
+        
+        updateBalance();
+        spinRouletteBtn2.disabled = false;
+        resetSessionTimeout();
+      }, 13000);
+    }
+    
+    // ========== FUNÇÕES DOS MODAIS ==========
+    function openModal(id) {
+      document.getElementById(id).style.display = "flex";
+      resetSessionTimeout();
+    }
+    
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+      resetSessionTimeout();
+    }
+    
+    function confirmWithdraw() {
+      const amountInput = document.getElementById("withdrawAmount");
+      const amount = parseFloat(amountInput.value);
+      
+      if (!isValidNumber(amount)) {
+        alert("Valor inválido!");
+        return;
+      }
+      
+      if (amount > balance) {
+        alert("Saldo insuficiente!");
+        return;
+      }
+      
+      if (amount > 1000) {
+        alert("Limite de saque é R$1000 por transação!");
+        return;
+      }
+      
+      balance -= amount;
+      updateBalance();
+      alert(`🏧 Saque de R$${amount.toFixed(2)} solicitado com sucesso!`);
+      console.log(`Saque solicitado: R$${amount}, Sessão: ${sessionId}`);
+      closeModal("withdrawModal");
+      amountInput.value = "";
+      resetSessionTimeout();
+    }
+    
+    function copyPix() {
+      navigator.clipboard.writeText(document.getElementById("pixLink").textContent)
+        .then(() => {
+          alert("📋 Link PIX copiado!");
+        })
+        .catch(err => {
+          console.error('Erro ao copiar: ', err);
+          alert("Erro ao copiar o link PIX");
+        });
+      resetSessionTimeout();
+    }
+    
+    function logout() {
+      if (confirm("Tem certeza que deseja sair?")) {
+        localStorage.removeItem("userSession");
+        localStorage.removeItem("fortuneBalance");
+        localStorage.removeItem("fortuneSessionId");
+        window.location.href = "index.html";
+      }
+    }
+    
+    function reloadPage() {
+      window.location.reload();
+    }
+
+    // ========== CONFIGURAÇÃO DOS EVENT LISTENERS ==========
+    document.addEventListener("DOMContentLoaded", function() {
+      console.log("Página carregada - configurando event listeners...");
+      
+      // Adicionar sons a todos os botões com classe has-sound
+      document.querySelectorAll('.has-sound').forEach(button => {
+        button.addEventListener('click', function() {
+          playButtonSound();
+        });
+      });
+      
+      // Roleta 1
+      document.getElementById("rouletteMinus1").onclick = function() {
+        if (rouletteBet1 > 1) {
+          rouletteBet1--;
+          updateRouletteInfo1();
+        }
+        resetSessionTimeout();
+      };
+      
+      document.getElementById("roulettePlus1").onclick = function() {
+        if (rouletteBet1 < 100) {
+          rouletteBet1++;
+          updateRouletteInfo1();
+        }
+        resetSessionTimeout();
+      };
+      
+      // Roleta 2
+      document.getElementById("rouletteMinus2").onclick = function() {
+        if (rouletteBet2 > 1) {
+          rouletteBet2--;
+          updateRouletteInfo2();
+        }
+        resetSessionTimeout();
+      };
+      
+      document.getElementById("roulettePlus2").onclick = function() {
+        if (rouletteBet2 < 100) {
+          rouletteBet2++;
+          updateRouletteInfo2();
+        }
+        resetSessionTimeout();
+      };
+      
+      // Troca de jogos
+      document.getElementById("roulette1Tab").onclick = function() {
+        rouletteGame1.style.display = "flex";
+        rouletteGame2.style.display = "none";
+        resetSessionTimeout();
+      };
+      
+      document.getElementById("roulette2Tab").onclick = function() {
+        rouletteGame1.style.display = "none";
+        rouletteGame2.style.display = "flex";
+        resetSessionTimeout();
+      };
+      
+      // Botões de ação
+      spinRouletteBtn1.onclick = spinRoulette1;
+      spinRouletteBtn2.onclick = spinRoulette2;
+      document.getElementById("depositBtn").onclick = function() { openModal("depositModal"); };
+      document.getElementById("withdrawBtn").onclick = function() { openModal("withdrawModal"); };
+      document.getElementById("logoutBtn").onclick = logout;
+      
+      console.log("Event listeners configurados!");
+      
+      // Iniciar timeout de sessão
+      resetSessionTimeout();
+    });
+
+    // ========== INICIALIZAÇÃO ==========
+    updateBalance();
+    updateRouletteInfo1();
+    updateRouletteInfo2();
+  </script> 
+</body>
+</html>
